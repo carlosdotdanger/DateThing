@@ -2,7 +2,7 @@ package net.tummi
 
 
 class Years(n: Int) extends TimeUnit(n){
-	override def toString = "%d months".format(n)
+	override def toString = "%d years".format(n)
 }
 
 object Years{
