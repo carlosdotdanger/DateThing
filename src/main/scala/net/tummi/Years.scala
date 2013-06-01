@@ -10,3 +10,5 @@ object Years{
 	def unapply (n: Int): Option[Int] = Some(n)
 	def :: (n: Int) = new Years(n)
 }
+
+object Year extends Years(1)

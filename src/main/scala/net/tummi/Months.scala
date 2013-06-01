@@ -9,3 +9,5 @@ object Months{
 	def :: (n: Int) = new Months(n)
 }
 
+object Month extends Months(1)
+

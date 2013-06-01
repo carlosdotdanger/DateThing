@@ -10,3 +10,4 @@ object Days{
 	def :: (n: Int) = new Days(n)
 }
 
+object Day extends Days(1)

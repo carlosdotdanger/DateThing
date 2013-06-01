@@ -1,15 +1,14 @@
 package net.tummi
 
 
-case class Date(y: Int, m: Int, d: Int) extends Ordered[Date]{
+case class Date(val y: Int, val m: Int, val d: Int) extends Ordered[Date]{
 	lazy val isLeap: Boolean = (y % 400 == 0) || (y % 4 == 0 && y % 100 != 0 )
-	
 	override def compare(o: Date): Int ={
 		y - o.y match{
 			case 0 => 
 				m - o.m match{
-					case 0 => d - o.d 
-					case md => md
+					case 0 => (d - o.d)
+					case md => md.asInstanceOf[Int]
 				} 
 			case yd => yd
 		}
@@ -23,12 +22,25 @@ case class Date(y: Int, m: Int, d: Int) extends Ordered[Date]{
 	override def >= (o:Date): Boolean = this.compare(o) > -1
 	def == (o: Date): Boolean = this.compare(o) == 0
 	
-	//maths
-	//TODO: obviously this isn't right, just for testing
-	def + (dys: Days): Date = new Date(y,m, d + dys.n)
-	def + (mts: Months): Date = new Date(y,m + mts.n,d)	
-	def + (yrs: Years): Date = new Date(y + yrs.n,m, d)
-	override def toString = "%02d-%02d-%02d".format(y,m,d)
+	def + (dys: Days): Date = 
+		dys.n match{
+			case 0 => this
+			case n => D.toDate(D.toDays(this) + n) 
+		}
+	def + (mts: Months): Date = {
+		val dm = m + mts.n % 12
+		val (ey,nm) = if(dm > 12) (1, (m + mts.n) % 12) else (0,dm) 
+		new Date(y + mts.n/12 + ey, nm, d)
+	}
+	def - (mts: Months): Date = {
+		val dm = m - mts.n % 12
+		val (ey,nm) = if(dm < 1) (1, (m - mts.n) % 12) else (0,dm) 
+		new Date(y - mts.n/12 - ey, nm, d)
+	}	
+	
+	def + (yrs: Years): Date = new Date(y + yrs.n, m, d)
+	def - (yrs: Years): Date = new Date(y - yrs.n, m, d)
+
+	override def toString = "%04d-%02d-%02d".format(y,m,d)
 	
 }	
-
