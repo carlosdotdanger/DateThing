@@ -71,8 +71,14 @@ class DateSuite extends FunSuite{
   test("plus days"){
     assert(w + (366 :: Days) === Date(2001,1,1))
     assert(x + (365 :: Days) === Date(2002,1,2))
+    assert(x + (0 :: Days) === x)
   }
 
+  test("minus days"){
+    assert(w - (366 :: Days) === Date(1998,12,31))
+    assert(x - (365 :: Days) === Date(2000,1,3))
+    assert(x - (0 :: Days) === x)
+  }
   
   test("plus months"){
     assert(w + (10 :: Months) === Date(2000,11,1))
@@ -97,6 +103,8 @@ class DateSuite extends FunSuite{
     assert(x - (3 :: Years) === Date(1998,1,2))
   }
 
-
+  test("toString"){
+    assert(x.toString === "2001-01-02")
+  }
 
 }

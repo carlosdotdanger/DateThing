@@ -8,7 +8,7 @@ case class Date(val y: Int, val m: Int, val d: Int) extends Ordered[Date]{
 			case 0 => 
 				m - o.m match{
 					case 0 => (d - o.d)
-					case md => md.asInstanceOf[Int]
+					case md => md
 				} 
 			case yd => yd
 		}
@@ -24,8 +24,13 @@ case class Date(val y: Int, val m: Int, val d: Int) extends Ordered[Date]{
 	
 	def + (dys: Days): Date = 
 		dys.n match{
-			case 0 => this
+			case 0 => new Date(y,m,d)
 			case n => D.toDate(D.toDays(this) + n) 
+		}
+	def - (dys: Days) = 
+		dys.n match{
+			case 0 => new Date(y,m,d)
+			case n => D.toDate(D.toDays(this) - n) 
 		}
 	def + (mts: Months): Date = {
 		val dm = m + mts.n % 12

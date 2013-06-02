@@ -5,7 +5,7 @@ class OutofBounds(value: Int, field: String)  extends Exception{
 	override def toString = "%d is out of bounds for %s".format(value,field)
 }
 
-case class Cweek(y: Long, w: Long)
+case class Cweek(y: Int, w: Int)
 
 object DAY_ZERO extends Date(0,3,1)
 
@@ -16,12 +16,12 @@ object DateMaths{
 	final val ordDays = Array(0,31,59,90,120,151,181,212,243,273,304,334)
 	final val ordDaysL = Array(0,31,60,91,121,152,182,213,244,274,305,335)
 
-	def dayOfYear(d: Date): Long = {
+	def dayOfYear(d: Date): Int = {
 		if (d.isLeap) ordDaysL((d.m - 1).asInstanceOf[Int]) + d.d
 		else ordDays((d.m - 1).asInstanceOf[Int]) + d.d	
 	}
 
-	def daysLeftinYear(d:Date): Long = {
+	def daysLeftinYear(d:Date): Int = {
 		if(d.isLeap) 366 - dayOfYear(d) 
 		else 365 - dayOfYear(d) 
 	}
@@ -29,20 +29,20 @@ object DateMaths{
 	/*def dateFromDOY(y: Int, dnum: Int): Date
 	def monthAndOffset(y: Int)*/
 
-	def wkDay(d:Date): Long ={
+	def wkDay(d:Date): Int ={
 		(d.d + mNum(d) + (d.y % 100) + ((d.y % 100)/4) + cNum(d.y)) % 7 
 	}
 
 	def cWeek(d: Date): Cweek ={ 
-		val w = ((dayOfYear(d) - wkDay(d) + 11) / 7).asInstanceOf[Int] 
+		val w = (dayOfYear(d) - wkDay(d) + 11) / 7
 		if(w > 51 && d.m == 1)  Cweek(d.y - 1, w)
 		else Cweek(d.y,w)
 	}
 
-	def isLeap(y: Long): Boolean = (y % 400 == 0) || (y % 4 == 0 && y % 100 != 0 )
+	def isLeap(y: Int): Boolean = (y % 400 == 0) || (y % 4 == 0 && y % 100 != 0 )
 	
-	def leapsBetween(d1: Date, d2: Date): Long = leapsBetween(d1.y,d2.y)
-	def leapsBetween(y1: Long,y2: Long): Long ={
+	def leapsBetween(d1: Date, d2: Date): Int = leapsBetween(d1.y,d2.y)
+	def leapsBetween(y1: Int,y2: Int): Int ={
 		val (l,g) = if(y1 > y2) (y2 + 1, y1 -1) else (y1 + 1, y2 -1)
 		leaps(g) - leaps(l)
 	}
@@ -53,13 +53,13 @@ object DateMaths{
 		else d #:: Stream.empty 
 	}
 	//internal 
-	def leaps(y: Long): Long = (math.floor(y / 4) - math.floor(y / 100) + math.floor(y / 400)).asInstanceOf[Int]	
+	def leaps(y: Int): Int = (math.floor(y / 4) - math.floor(y / 100) + math.floor(y / 400)).asInstanceOf[Int]	
 
 	def mNum(d: Date): Int ={
-		if(isLeap(d.y)) M_NumsL((d.m - 1).asInstanceOf[Int])
-		else M_Nums((d.m - 1).asInstanceOf[Int])	
+		if(isLeap(d.y)) M_NumsL(d.m - 1)
+		else M_Nums(d.m - 1)	
 	}
 	
-	def cNum(y: Long): Long = 6 - ((((y - (y % 100))/100) % 4) * 2)  	
+	def cNum(y: Int): Int = 6 - ((((y - (y % 100))/100) % 4) * 2)  	
 }
 
