@@ -30,7 +30,7 @@ class DSuite extends FunSuite{
 		assert(DateMaths.toDate(1461) === Date(4,3,1))
 		assert(DateMaths.toDate(14610) === Date(40,3,1))
 		assert(DateMaths.toDate(146097) === Date(400,3,1))
-		//assert(DateMaths.toDate(292194) === Date(800,3,1))
+		assert(DateMaths.toDate(292194) === Date(800,3,1))
 		assert(DateMaths.toDate(584388) === Date(1600,3,1))
 	}
 	test("to days and back"){

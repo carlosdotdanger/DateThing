@@ -34,7 +34,15 @@ class DateMathsSuite extends FunSuite{
 	test("leapsBetween"){
 		assert(DateMaths.leapsBetween(lyear,fri) === 3)
 	}
-  
+	
+	test("isLeap"){
+		assert(DateMaths.isLeap(2100) === false )
+		assert(DateMaths.isLeap(3000) === false )
+		assert(DateMaths.isLeap(2000) === true )
+		assert(DateMaths.isLeap(2008) === true )
+		assert(DateMaths.isLeap(1999) === false )
+
+	}  
 	test("every"){
     	val days = DateMaths.every()
     	assert(days.take(3).toArray === Array(DAY_ZERO, DAY_ZERO + (1 :: Days), DAY_ZERO + (2 :: Days)))

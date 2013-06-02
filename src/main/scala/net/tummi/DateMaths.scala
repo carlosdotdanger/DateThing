@@ -7,7 +7,7 @@ class OutofBounds(value: Int, field: String)  extends Exception{
 
 case class Cweek(y: Int, w: Int)
 
-object DAY_ZERO extends Date(0,3,1)
+
 
 object DateMaths{
 	final val M_Nums =   Array(0,3,3,6,1,4,6,2,5,0,3,5)
@@ -17,17 +17,14 @@ object DateMaths{
 	final val ordDaysL = Array(0,31,60,91,121,152,182,213,244,274,305,335)
 
 	def dayOfYear(d: Date): Int = {
-		if (d.isLeap) ordDaysL((d.m - 1).asInstanceOf[Int]) + d.d
+		if (isLeap(d.y)) ordDaysL((d.m - 1).asInstanceOf[Int]) + d.d
 		else ordDays((d.m - 1).asInstanceOf[Int]) + d.d	
 	}
 
 	def daysLeftinYear(d:Date): Int = {
-		if(d.isLeap) 366 - dayOfYear(d) 
+		if(isLeap(d.y)) 366 - dayOfYear(d) 
 		else 365 - dayOfYear(d) 
 	}
-
-	/*def dateFromDOY(y: Int, dnum: Int): Date
-	def monthAndOffset(y: Int)*/
 
 	def wkDay(d:Date): Int ={
 		(d.d + mNum(d) + (d.y % 100) + ((d.y % 100)/4) + cNum(d.y)) % 7 
@@ -55,6 +52,24 @@ object DateMaths{
 	//internal 
 	def leaps(y: Int): Int = (math.floor(y / 4) - math.floor(y / 100) + math.floor(y / 400)).asInstanceOf[Int]	
 
+	def chkDate(dt: Date): Boolean = {
+		dt.y match{
+			case by if (by > 9999  || by < 0) => false
+			case y =>
+				dt.m match {
+					case bm if(bm > 12 || bm < 1) => false
+					case m =>
+						dt.d match {
+							case bd if(bd < 0) => false 
+							case d => 
+								if(m == 2 && d == 29) isLeap(y) 
+								else MONTH_DAYS(m - 1) >= d
+						}
+						 
+				}
+				
+		}
+	}
 	def mNum(d: Date): Int ={
 		if(isLeap(d.y)) M_NumsL(d.m - 1)
 		else M_Nums(d.m - 1)	
@@ -83,5 +98,6 @@ object DateMaths{
 	}
 	
 	def lf(y: Long) = (365*y) + y/4 - y/100 + y/400
+
 }
 

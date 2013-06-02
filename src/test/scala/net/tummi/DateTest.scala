@@ -61,12 +61,7 @@ class DateSuite extends FunSuite{
     assert(res === expected)
   }
 
-  test("isLeap"){
-    val res = for(x1 <-l) yield x1.isLeap
-    val expected = List(true,false,false,false)
-    assert(res === expected)
-    assert(Date(2100,1,1).isLeap === false )
-  }
+
 
   test("plus days"){
     assert(w + (366 :: Days) === Date(2001,1,1))
