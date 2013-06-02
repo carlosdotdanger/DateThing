@@ -61,5 +61,27 @@ object DateMaths{
 	}
 	
 	def cNum(y: Int): Int = 6 - ((((y - (y % 100))/100) % 4) * 2)  	
+
+	def toDays(d:Date):Long = {
+		val m = (d.m + 9) % 12
+		val y = d.y - m/10
+		lf(y) + ((m * 306) + 5)/10 + (d.d -1)
+	}
+	
+	def toDate(x: Long): Date ={
+		var y = (10000L * x + 14780L)/3652425L	
+		var ddd = x - lf(y)
+		if(ddd < 0){
+			y = y - 1
+			ddd = x - lf(y) 
+		}
+		val mi = (100L * ddd + 52)/3060L
+		val mm = (mi + 2) % 12 + 1
+		y = y + (mi + 2)/12
+		val dd = ddd - ((mi*306) + 5)/10 + 1
+		Date(y.asInstanceOf[Int], mm.asInstanceOf[Int], dd.asInstanceOf[Int])
+	}
+	
+	def lf(y: Long) = (365*y) + y/4 - y/100 + y/400
 }
 
