@@ -5,8 +5,6 @@ class OutofBounds(value: Int, field: String)  extends Exception{
 	override def toString = "%d is out of bounds for %s".format(value,field)
 }
 
-case class Cweek(y: Int, w: Int)
-
 
 
 object DateMaths{
@@ -44,7 +42,7 @@ object DateMaths{
 		leaps(g) - leaps(l)
 	}
 	
-	def every(dy: Days = Day, d: Date = DAY_ZERO, until: Date => Boolean = {x => false}): Stream[Date] ={ 
+	def every(dy: Days = (1 :: Days), d: Date = DAY_ZERO, until: Date => Boolean = {x => false}): Stream[Date] ={ 
 		val nd = d + dy
 		if(!until(nd)){ d #:: every(dy, nd, until)}
 		else d #:: Stream.empty 
@@ -54,7 +52,7 @@ object DateMaths{
 
 	def chkDate(dt: Date): Boolean = {
 		dt.y match{
-			case by if (by > 9999  || by < 0) => false
+			case by if (by > 99999  || by < 0) => false
 			case y =>
 				dt.m match {
 					case bm if(bm > 12 || bm < 1) => false

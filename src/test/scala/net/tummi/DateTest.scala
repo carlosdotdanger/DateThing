@@ -78,7 +78,7 @@ class DateSuite extends FunSuite{
   test("plus months"){
     assert(w + (10 :: Months) === Date(2000,11,1))
     assert(x + (24 :: Months) === Date(2003,1,2))
-    assert(x + (120000 :: Months) === Date(12001,1,2))
+    assert(x + (12000 :: Months) === Date(3001,1,2))
     assert(Date(2010,12,31) + (13 :: Months) === Date(2012,1,31))
   }
 
@@ -100,6 +100,10 @@ class DateSuite extends FunSuite{
 
   test("toString"){
     assert(x.toString === "2001-01-02")
+  }
+
+  test("compare Date and Month"){
+    val m = Map[Month,String]()
   }
 
 }

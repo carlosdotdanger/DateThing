@@ -1,7 +1,37 @@
 package net.tummi
 
+//import DateImplicits._
+import scala.language.implicitConversions
+import net.tummi.Date._
+
+
 
 case class BadDateException(y: Int,m: Int, d:Int) extends Exception() 
+
+sealed trait DateObject
+
+case class Cweek(y: Int, w: Int) extends DateObject with Ordered[Cweek]{
+	override def compare(o: Cweek): Int = {
+		y - o.y match{
+			case 0 => w - o.w
+			case d => d
+		}
+	}
+}
+
+case class Month(y: Int, m: Int) extends DateObject with Ordered[Month]{
+	override def compare(o: Month): Int = {
+		y - o.y match{
+			case 0 => m - o.m
+			case d => d
+		}
+	}
+}
+
+case class Year(y: Int) extends DateObject with Ordered[Year]{
+	override def compare(o: Year): Int = y - o.y
+}
+
 
 case class Date(val y: Int, val m: Int, val d: Int) extends Ordered[Date]{
 	if(! DateMaths.chkDate(this))
@@ -53,6 +83,12 @@ case class Date(val y: Int, val m: Int, val d: Int) extends Ordered[Date]{
 	
 }	
 
+
+object Date{
+	implicit def Date2Month(d: Date): Month = Month(d.y, d.m)
+	implicit def Date2Year(d: Date): Year = Year(d.y)
+}
+
 object DAY_ZERO extends Date(0,3,1)
 
 object END_OF_DAYS extends Date(9999,12,31) 
@@ -64,6 +100,6 @@ object Today{
 object FromMillis{
 	def apply(ts: Long): Date = {
 		val d = (ts/86400000).asInstanceOf[Int]
-		Date(1969,12,31) + (d :: Days)
+		Date(1970,1,1) + (d :: Days)
 	}
 }

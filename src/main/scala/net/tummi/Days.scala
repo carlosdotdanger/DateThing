@@ -9,5 +9,3 @@ object Days{
 	def unapply (n: Int): Option[Int] = Some(n)
 	def :: (n: Int) = new Days(n)
 }
-
-object Day extends Days(1)
