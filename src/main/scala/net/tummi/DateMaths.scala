@@ -1,18 +1,19 @@
 package net.tummi
 
 
-class OutofBounds(value: Int, field: String)  extends Exception{
-	override def toString = "%d is out of bounds for %s".format(value,field)
-}
-
-
-
 object DateMaths{
 	final val M_Nums =   Array(0,3,3,6,1,4,6,2,5,0,3,5)
 	final val M_NumsL = Array(-1,2,3,6,1,4,6,2,5,0,3,5) 
 	final val MONTH_DAYS = Array(31,28,31,30,31,30,31,31,30,31,30,31)
 	final val ordDays = Array(0,31,59,90,120,151,181,212,243,273,304,334)
 	final val ordDaysL = Array(0,31,60,91,121,152,182,213,244,274,305,335)
+
+	def monthDays(y:Int,m: Int): Int ={
+		m match{
+			case 2 => if(isLeap(y)) 29 else 28
+			case x => MONTH_DAYS(x-1)
+		}
+	}
 
 	def dayOfYear(d: Date): Int = {
 		if (isLeap(d.y)) ordDaysL((d.m - 1).asInstanceOf[Int]) + d.d
@@ -42,26 +43,21 @@ object DateMaths{
 		leaps(g) - leaps(l)
 	}
 	
-	def every(dy: Days = (1 :: Days), d: Date = DAY_ZERO, until: Date => Boolean = {x => false}): Stream[Date] ={ 
-		val nd = d + dy
-		if(!until(nd)){ d #:: every(dy, nd, until)}
-		else d #:: Stream.empty 
-	}
 	//internal 
 	def leaps(y: Int): Int = (math.floor(y / 4) - math.floor(y / 100) + math.floor(y / 400)).asInstanceOf[Int]	
 
-	def chkDate(dt: Date): Boolean = {
-		dt.y match{
-			case by if (by > 99999  || by < 0) => false
-			case y =>
-				dt.m match {
+	def chkDate(y: Int,m: Int, d: Int): Boolean = {
+		y match{
+			case by if (by > 9999  || by < 0) => false
+			case gy =>
+				m match {
 					case bm if(bm > 12 || bm < 1) => false
-					case m =>
-						dt.d match {
-							case bd if(bd < 0) => false 
-							case d => 
-								if(m == 2 && d == 29) isLeap(y) 
-								else MONTH_DAYS(m - 1) >= d
+					case gm =>
+						d match {
+							case bd if(bd < 1) => false 
+							case gd => 
+								if(gm == 2 && gd == 29) isLeap(gy) 
+								else MONTH_DAYS(gm - 1) >= gd
 						}
 						 
 				}

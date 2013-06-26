@@ -10,11 +10,6 @@ class DateSuite extends FunSuite{
   val z = Date(2002,1,1)
   val l = List(w,x,y,z)
 
-  test("UFO"){
-   val res = for(x1 <-l; x2 <- l) yield x1 <=> x2
-   val expected = List(0,-1,-1,-2,1,0,-1,-1,1,1,0,-1,2,1,1,0)
-   assert(res === expected)
-  }
 
   test("lt"){
     val res = for(x1 <-l; x2 <- l) yield x1 < x2
@@ -102,8 +97,25 @@ class DateSuite extends FunSuite{
     assert(x.toString === "2001-01-02")
   }
 
-  test("compare Date and Month"){
-    val m = Map[Month,String]()
+  test("from string"){
+    assert(Some(Date(2013,1,1)) === Date("2013-01-01"))
+    assert (None === Date("yo mama"))
+  }
+
+  test("implicit date to month"){
+    assert(Month(2013,1) === takesMonth(Date(2013,1,1)))  
+  }
+
+  test("implicit date to year"){
+    assert(Year(2013) === takesYear(Date(2013,1,1)))  
+  }
+
+  def takesMonth(m: Month) = m
+  def takesYear(y: Year) = y
+  
+  test("every"){
+    val days = Date.every()
+    assert(days.take(3).toArray === Array(DAY_ZERO, DAY_ZERO + (1 :: Days), DAY_ZERO + (2 :: Days)))
   }
 
 }

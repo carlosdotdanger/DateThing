@@ -15,7 +15,7 @@ class DSuite extends FunSuite{
 
 	test("toDays"){
 		var counter = 0L
-		val i = DateMaths.every().take(1).iterator
+		val i = Date.every().take(1).iterator
 		for(d <- i ){ 
 			assert(DateMaths.toDays(d) === counter)
 			assert(DateMaths.toDate(counter) === d)

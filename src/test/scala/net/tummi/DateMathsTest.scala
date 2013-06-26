@@ -43,10 +43,30 @@ class DateMathsSuite extends FunSuite{
 		assert(DateMaths.isLeap(1999) === false )
 
 	}  
-	test("every"){
-    	val days = DateMaths.every()
-    	assert(days.take(3).toArray === Array(DAY_ZERO, DAY_ZERO + (1 :: Days), DAY_ZERO + (2 :: Days)))
-  	}
 
+	test("chkDate"){
+		assert(DateMaths.chkDate(10000,1,1) === false)
+		assert(DateMaths.chkDate(-1,1,1) === false)
+		assert(DateMaths.chkDate(2000,-1,1) === false)
+		assert(DateMaths.chkDate(2000,13,1) === false)
+		assert(DateMaths.chkDate(2000,1, -1) === false)
+		assert(DateMaths.chkDate(2001,1,50) === false)
+		assert(DateMaths.chkDate(2001,2,29) === false)
+	}
+
+
+	test("day of year"){
+		assert(DateMaths.dayOfYear(Date(2000,1,1)) === 1)
+		assert(DateMaths.dayOfYear(Date(2000,12,31)) === 366)
+		assert(DateMaths.dayOfYear(Date(2001,1,1)) === 1)
+		assert(DateMaths.dayOfYear(Date(2001,12,31)) === 365)
+	}
+
+	test("days left in year"){
+		assert(DateMaths.daysLeftinYear(Date(2001,12, 30)) === 1)
+		assert(DateMaths.daysLeftinYear(Date(2000,1, 1)) === 365)
+		assert(DateMaths.daysLeftinYear(Date(2001,1, 1)) === 364)
+	}
 
 }
+
