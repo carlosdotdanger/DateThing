@@ -29,19 +29,15 @@ object DateMaths{
 		(d.d + mNum(d) + (d.y % 100) + ((d.y % 100)/4) + cNum(d.y)) % 7 
 	}
 
-	def cWeek(d: Date): Cweek ={ 
-		val w = (dayOfYear(d) - wkDay(d) + 11) / 7
-		if(w > 51 && d.m == 1)  Cweek(d.y - 1, w)
-		else Cweek(d.y,w)
+	def week(d: Date): Week ={ 
+		val nd = toDate( toDays(d) + (4 - wkDay(d)))
+		println("%s => %s".format(d,nd))
+		val w = (dayOfYear(nd) + 6) / 7
+		Week(nd.y,w)
 	}
 
 	def isLeap(y: Int): Boolean = (y % 400 == 0) || (y % 4 == 0 && y % 100 != 0 )
 	
-	def leapsBetween(d1: Date, d2: Date): Int = leapsBetween(d1.y,d2.y)
-	def leapsBetween(y1: Int,y2: Int): Int ={
-		val (l,g) = if(y1 > y2) (y2 + 1, y1 -1) else (y1 + 1, y2 -1)
-		leaps(g) - leaps(l)
-	}
 	
 	//internal 
 	def leaps(y: Int): Int = (math.floor(y / 4) - math.floor(y / 100) + math.floor(y / 400)).asInstanceOf[Int]	

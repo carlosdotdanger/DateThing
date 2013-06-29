@@ -9,6 +9,15 @@ class DateMathsSuite extends FunSuite{
 	test("wkDay"){
 		assert(DateMaths.wkDay(fri) === 5)
 		assert(DateMaths.wkDay(lyear) === 2)
+		assert(DateMaths.wkDay(Date(1986,6,1)) === 0)
+		assert(DateMaths.wkDay(Date(2010,1,2)) === 6)
+		assert(DateMaths.wkDay(Date(2010,1,3)) === 0)
+		assert(DateMaths.wkDay(Date(2010,1,4)) === 1)
+		assert(DateMaths.wkDay(Date(2010,1,5)) === 2)
+		assert(DateMaths.wkDay(Date(2010,1,6)) === 3)
+		assert(DateMaths.wkDay(Date(2010,1,7)) === 4)
+		assert(DateMaths.wkDay(Date(2010,1,8)) === 5)
+		assert(DateMaths.wkDay(Date(2010,1,9)) === 6)
 	}
 	
 	test("cnum"){
@@ -29,10 +38,6 @@ class DateMathsSuite extends FunSuite{
 	test("mnum"){
 		assert(DateMaths.mNum(fri) == 1)
 		assert(DateMaths.mNum(lyear) == 2)
-	}
-
-	test("leapsBetween"){
-		assert(DateMaths.leapsBetween(lyear,fri) === 3)
 	}
 	
 	test("isLeap"){
@@ -66,6 +71,23 @@ class DateMathsSuite extends FunSuite{
 		assert(DateMaths.daysLeftinYear(Date(2001,12, 30)) === 1)
 		assert(DateMaths.daysLeftinYear(Date(2000,1, 1)) === 365)
 		assert(DateMaths.daysLeftinYear(Date(2001,1, 1)) === 364)
+	}
+
+
+	test("week"){
+		assert(DateMaths.week(Date(2013,6,26)) === Week(2013,26))
+		assert(DateMaths.week(Date(2013,6,23)) === Week(2013,26))
+		assert(DateMaths.week(Date(2013,1,1)) === Week(2013,1))		
+		assert(DateMaths.week(Date(2012,12,31)) === Week(2013,1))
+		assert(DateMaths.week(Date(2009,12,27)) === Week(2009,53))			
+		assert(DateMaths.week(Date(2009,12,28)) === Week(2009,53))
+		assert(DateMaths.week(Date(2009,12,29)) === Week(2009,53))			
+		assert(DateMaths.week(Date(2009,12,30)) === Week(2009,53))	
+		assert(DateMaths.week(Date(2009,12,31)) === Week(2009,53))			
+		assert(DateMaths.week(Date(2010,1,1)) === Week(2009,53))
+		assert(DateMaths.week(Date(2010,1,2)) === Week(2009,53))
+		assert(DateMaths.week(Date(2010,1,3)) === Week(2010,1))		
+
 	}
 
 }
