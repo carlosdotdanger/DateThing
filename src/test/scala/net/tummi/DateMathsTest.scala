@@ -64,12 +64,6 @@ class DateMathsSuite extends FunSuite{
 		assert(dayOfYear(Date(2001,12,31)) === 365)
 	}
 
-	test("days left in year"){
-		assert(daysLeftinYear(Date(2001,12, 30)) === 1)
-		assert(daysLeftinYear(Date(2000,1, 1)) === 365)
-		assert(daysLeftinYear(Date(2001,1, 1)) === 364)
-	}
-
 
 	test("week"){
 		assert(week(Date(2013,6,26)) === Week(2013,26))

@@ -8,7 +8,10 @@ import scala.language.implicitConversions
 
 case class BadDateException(y: Int,m: Int, d:Int) extends Exception() 
 
-sealed trait DateObject
+sealed abstract trait DateObject{
+	def start: Date
+	def end: Date
+}
 
 case class Week(y: Int, w: Int) extends DateObject with Ordered[Week]{
 	def start: Date = dateFromWeek(this)
@@ -38,8 +41,22 @@ case class Month(y: Int, m: Int) extends DateObject with Ordered[Month]{
 		}
 	}
 
-	def + (mts: Months): Month = new Month(y + ((mts.n + m)/12) , (mts.n + m) % 12) 
-	def - (mts: Months): Month = new Month(y + ((mts.n - m)/12) , 1)//(mts.n - m) % 12)
+	def + (mts: Months): Month = {
+		if(mts.n < 0)  return this - (mts.n * - 1 :: Months) 
+		val nmod = mts.n % 12
+		val nmodtot = nmod + m
+		if(nmodtot > 12) new Month(y + 1 + (mts.n)/12 , nmodtot - 12) 
+		else new Month (y + (mts.n)/12, nmodtot)
+		
+	}
+	def - (mts: Months): Month = {
+		if(mts.n < 0) return this + (mts.n * - 1 :: Months) 
+		val nmod = mts.n % 12
+		val nmodtot = m - nmod
+		if(nmodtot < 1) new Month( y - 1 - mts.n/12, nmodtot + 12)
+		else new Month(y - mts.n/12, nmodtot)
+			
+	}
 	def + (yrs: Years): Month = new Month(y + yrs.n, m)
 	def - (yrs: Years): Month = new Month(y - yrs.n, m)
 	override def toString = "%04d-%02d".format(y,m)
@@ -47,7 +64,8 @@ case class Month(y: Int, m: Int) extends DateObject with Ordered[Month]{
 
 object Month{
 	implicit def Month2Year(m:Month): Year = new Year(m.y)
-	def every(dy: Months = (1 :: Months), from: Month = DAY_ZERO, until: Month => Boolean = {x => false}): Stream[Month] ={ 
+	def every(	dy: Months = (1 :: Months), from: Month = DAY_ZERO, 
+				until: Month => Boolean = {x => false}): Stream[Month] ={ 
 		val nd = from + dy
 		if(!until(nd)){ from #:: every(dy, nd, until)}
 		else from #:: Stream.empty 
@@ -77,7 +95,7 @@ object Year{
 case class Date(val y: Int, val m: Int, val d: Int) extends Ordered[Date]{
 	if(! chkDate(y,m,d))
 		throw BadDateException(y,m,d)
-
+	lazy val day: Int = wkDay(this)
 	def start: Date =  new Date(y,m,d)
 	def end: Date = new Date(y,m,d)
 	override def compare(o: Date): Int ={
@@ -101,19 +119,6 @@ case class Date(val y: Int, val m: Int, val d: Int) extends Ordered[Date]{
 			case 0 => new Date(y,m,d)
 			case n => toDate(toDays(this) - n) 
 		}
-	def + (mts: Months): Date = {
-		val dm = m + mts.n % 12
-		val (ey,nm) = if(dm > 12) (1, (m + mts.n) % 12) else (0,dm) 
-		new Date(y + mts.n/12 + ey, nm, d)
-	}
-	def - (mts: Months): Date = {
-		val dm = m - mts.n % 12
-		val (ey,nm) = if(dm < 1) (1, (m - mts.n) % 12) else (0,dm) 
-		new Date(y - mts.n/12 - ey, nm, d)
-	}	
-	
-	def + (yrs: Years): Date = new Date(y + yrs.n, m, d)
-	def - (yrs: Years): Date = new Date(y - yrs.n, m, d)
 
 	override def toString = "%04d-%02d-%02d".format(y,m,d)
 	

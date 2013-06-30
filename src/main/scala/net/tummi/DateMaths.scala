@@ -20,11 +20,6 @@ object DateMaths{
 		else ordDays((d.m - 1).asInstanceOf[Int]) + d.d	
 	}
 
-	def daysLeftinYear(d:Date): Int = {
-		if(isLeap(d.y)) 366 - dayOfYear(d) 
-		else 365 - dayOfYear(d) 
-	}
-
 	def wkDay(d:Date): Int ={
 		((d.d + mNum(d) + (d.y % 100) + ((d.y % 100)/4) + cNum(d.y)) - 1) % 7 
 	}
@@ -43,9 +38,7 @@ object DateMaths{
 			case w.y => j1 - (j1WkDay :: Days)
 			case _: Int => j1 + ((7 - j1WkDay ) :: Days)
 		}
-
-		firstMon + ( 7 * (w.w - 1 + day) :: Days)
-
+		firstMon + ( (7 * (w.w - 1)) + day :: Days)
 	}
 
 	def isLeap(y: Int): Boolean = (y % 400 == 0) || (y % 4 == 0 && y % 100 != 0 )
@@ -100,6 +93,5 @@ object DateMaths{
 	}
 	
 	def lf(y: Long) = (365*y) + y/4 - y/100 + y/400
-
 }
 
