@@ -26,14 +26,26 @@ object DateMaths{
 	}
 
 	def wkDay(d:Date): Int ={
-		(d.d + mNum(d) + (d.y % 100) + ((d.y % 100)/4) + cNum(d.y)) % 7 
+		((d.d + mNum(d) + (d.y % 100) + ((d.y % 100)/4) + cNum(d.y)) - 1) % 7 
 	}
 
 	def week(d: Date): Week ={ 
-		val nd = toDate( toDays(d) + (4 - wkDay(d)))
-		println("%s => %s".format(d,nd))
+		val nd = toDate( toDays(d) + (3 - wkDay(d)))
 		val w = (dayOfYear(nd) + 6) / 7
 		Week(nd.y,w)
+	}
+    
+	def dateFromWeek(w: Week, day: Int = 0): Date ={
+		val j1 = Date(w.y, 1, 1)
+		val j1WkDay = wkDay(j1)
+		val j1Wk: Week = j1
+		val firstMon = j1Wk.y match{
+			case w.y => j1 - (j1WkDay :: Days)
+			case _: Int => j1 + ((7 - j1WkDay ) :: Days)
+		}
+
+		firstMon + ( 7 * (w.w - 1 + day) :: Days)
+
 	}
 
 	def isLeap(y: Int): Boolean = (y % 400 == 0) || (y % 4 == 0 && y % 100 != 0 )

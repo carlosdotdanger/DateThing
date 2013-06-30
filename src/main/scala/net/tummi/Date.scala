@@ -11,6 +11,8 @@ case class BadDateException(y: Int,m: Int, d:Int) extends Exception()
 sealed trait DateObject
 
 case class Week(y: Int, w: Int) extends DateObject with Ordered[Week]{
+	def start: Date = dateFromWeek(this)
+	def end: Date = dateFromWeek(this,6)
 	override def compare(o: Week): Int = {
 		y - o.y match{
 			case 0 => w - o.w
@@ -36,8 +38,10 @@ case class Month(y: Int, m: Int) extends DateObject with Ordered[Month]{
 		}
 	}
 
-	def + (mts: Months): Month = new Month(y + (mts.n/12) , (mts.n % 12) + m )
+	def + (mts: Months): Month = new Month(y + ((mts.n + m)/12) , (mts.n + m) % 12) 
+	def - (mts: Months): Month = new Month(y + ((mts.n - m)/12) , 1)//(mts.n - m) % 12)
 	def + (yrs: Years): Month = new Month(y + yrs.n, m)
+	def - (yrs: Years): Month = new Month(y - yrs.n, m)
 	override def toString = "%04d-%02d".format(y,m)
 }
 
@@ -58,6 +62,7 @@ case class Year(y: Int) extends DateObject with Ordered[Year]{
 	def end: Date = new Date(y,12,31)
 	override def compare(o: Year): Int = y - o.y
 	def + (yrs: Years) = new Year(y + yrs.n)
+	def - (yrs: Years) = new Year(y - yrs.n)
 	override def toString = y.toString
 }
 
