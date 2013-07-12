@@ -22,11 +22,20 @@ case class Week(y: Int, w: Int) extends DateObject with Ordered[Week]{
 			case d => d
 		}
 	}
+
+	def + (wks: Weeks): Week = week(dateFromWeek(this) + ((wks.n * 7) :: Days) )
 	override def toString = "%04d-%02d".format(y,w)
 }
 
 object Week{
 	implicit def Week2Year(c: Week) = new Year(c.y)
+	
+	def every(	dw: Weeks = (1 :: Weeks), from: Week = DAY_ZERO, 
+				until: Week => Boolean = {x => false}): Stream[Week] ={ 
+		val nd = from + dw
+		if(!until(nd)){ from #:: every(dw, nd, until)}
+		else from #:: Stream.empty 
+	}
 }
 
 case class Month(y: Int, m: Int) extends DateObject with Ordered[Month]{
